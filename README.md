@@ -3,6 +3,8 @@
 ## Overview
 Welcome to the Financial PDF Pattern Recognition tool! This repository contains a powerful solution for automatically recognizing patterns within financial PDF documents. Whether you're dealing with annual reports, balance sheets, or income statements, this tool will help you extract valuable information efficiently.
 
+[![Watch the video](https://i.stack.imgur.com/Vp2cE.png)](https://youtu.be/vt5fpE0bzSY)
+
 ## Features
 - **Pattern Recognition**: Identify and highlight specific patterns within financial PDF documents.
 - **User-Driven**: Users can indicate patterns by drawing boxes around different elements in the document.
