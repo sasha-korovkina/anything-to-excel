@@ -1,2 +1,3 @@
-The vision: to create a library that would take any source of data - a scan, a website, a PDF file and conver it to Excel. 
+MVP: Take a PDF and extract the text from it.
+
 
