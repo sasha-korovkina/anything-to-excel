@@ -40,8 +40,8 @@ def main():
     # Add a file uploader widget
     uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 
-    button_clicked = st.button("Submit")
-    json_btn = st.button("Convert Text to JSON")
+    button_clicked = st.button("Convert PDF to Plain Text")
+    json_btn = st.button("Convert PDF to JSON")
 
     # Check if the button is clicked
     if button_clicked:
