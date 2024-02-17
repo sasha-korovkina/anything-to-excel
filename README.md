@@ -5,6 +5,6 @@ Hey! This is my first open source project where you can extract text from PDF fi
 1. You select a section of the PDF file you want
 2. This PDF file section is saved
 
-https://www.youtube.com/watch?v=pnV7IJnuQos
-
+[https://www.youtube.com/watch?v=pnV7IJnuQos
+](https://www.youtube.com/watch?v=pnV7IJnuQos)https://www.youtube.com/watch?v=pnV7IJnuQos
 
