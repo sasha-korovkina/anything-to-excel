@@ -78,14 +78,52 @@ def main():
             # Select page
             page_number = st.number_input("Enter page number", value=1, min_value=1, max_value=len(pdf_doc), step=1)
 
+            # Display PDF
             page = pdf_doc.load_page(page_number - 1)
             pixmap = page.get_pixmap()
             img = Image.frombytes("RGB", [pixmap.width, pixmap.height], pixmap.samples)
             img_bytes = io.BytesIO()
             img.save(img_bytes, format="PNG")
-            st.image(img_bytes)
-        else:
-            st.write("No pages found in the PDF document.")
+            #st.image(img_bytes, use_column_width=True)
+
+            # Create drawing canvas for selecting area
+            drawing_area = st_canvas(
+                fill_color="rgba(255, 165, 0, 0.3)",
+                stroke_width=5,
+                drawing_mode="rect",
+                height=pixmap.height,
+                width=pixmap.width,
+                background_image=img,
+                key="drawing_canvas"
+            )
+
+            # Optional: Save selected area
+            if st.button("Save Selected Area"):
+                # Get drawn shapes
+                drawn_shapes = drawing_area.json_data["objects"]
+
+                # Find the rectangle drawn by the user
+                selected_rectangle = None
+                for shape in drawn_shapes:
+                    if shape["type"] == "rect":
+                        selected_rectangle = shape
+                        break
+
+                if selected_rectangle:
+                    # Get coordinates of the selected rectangle
+                    x0 = selected_rectangle["left"]
+                    y0 = selected_rectangle["top"]
+                    x1 = selected_rectangle["left"] + selected_rectangle["width"]
+                    y1 = selected_rectangle["top"] + selected_rectangle["height"]
+
+                    # Crop selected area from the PDF image
+                    selected_area_img = img.crop((x0, y0, x1, y1))
+
+                    # Save selected area as a separate image
+                    st.image(selected_area_img, caption="Selected Area", use_column_width=True)
+                    st.write("Selected area saved.")
+                else:
+                    st.write("No rectangle drawn. Please draw a rectangle to select an area.")
 
     # Check if the button is clicked
     if txt_btn:
