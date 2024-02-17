@@ -1,21 +1,13 @@
 from PyPDF2 import PdfReader
-from pdf2image import convert_from_bytes
 import io
-import json
 import PyPDF2
-import pdfminer
 from pdfminer.high_level import extract_text
 import xml.etree.ElementTree as ET
-import streamlit as st
-from PIL import Image
-import fitz  # PyMuPDF
 from streamlit_drawable_canvas import st_canvas
 import streamlit as st
 import fitz
 import tempfile
 from PIL import Image
-
-#from streamlit_aggrid import AgGrid
 
 def extract_text_from_pdf(uploaded_file):
     text = ""
