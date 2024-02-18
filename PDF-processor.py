@@ -49,6 +49,14 @@ def convert_pdf_to_xml(pdf_file):
     xml_str = ET.tostring(root, encoding="unicode", method="xml")
     return xml_str
 
+def get_pdf_creation_software(pdf_file):
+    with open(pdf_file, 'rb') as file:
+        reader = PyPDF2.PdfFileReader(file)
+        metadata = reader.getDocumentInfo()
+        if '/Producer' in metadata:
+            return metadata['/Producer']
+        else:
+            return "Unknown"
 
 def main():
     st.title("CMI2I PDF Reader")
@@ -61,6 +69,9 @@ def main():
     xml_btn = st.button("Convert PDF to XML")
 
     if uploaded_file is not None:
+        pdf_file_path = uploaded_file # Replace with your PDF file path
+        creation_software = get_pdf_creation_software(pdf_file_path)
+        print(f"The PDF was created with: {creation_software}")
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file.write(uploaded_file.read())
             temp_file_path = temp_file.name
