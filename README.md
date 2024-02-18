@@ -1,4 +1,4 @@
-# Financial PDF Pattern Recognition 📊🔍
+# Standardised PDF Extractor 📊🔍
 
 ## Overview
 Hey! This is my first open source project where you can extract text from PDF file segments. Here is how it works so far:
