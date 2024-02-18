@@ -4,7 +4,7 @@ import os
 pdf_file_path = "M:\\CDB\\Analyst\\Rhys\\Data\\(New) Goldman Sachs ND CMi2i responses (Germany).pdf"
 directory_path = "M:\\CDB\\Analyst\\Rhys\\Data\\"
 
-# Loop through the directory
+## Loop through the directory
 for filename in os.listdir(directory_path):
     if filename.endswith(".pdf"):  # Check if the file is a PDF
         pdf_file_path = os.path.join(directory_path, filename)
