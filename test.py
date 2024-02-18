@@ -3,10 +3,11 @@ import os
 
 pdf_file_path = "M:\\CDB\\Analyst\\Rhys\\Data\\(New) Goldman Sachs ND CMi2i responses (Germany).pdf"
 directory_path = "M:\\CDB\\Analyst\\Rhys\\Data\\"
+processed_files = 0  # Initialize counter
 
-## Loop through the directory
+# Loop through the directory
 for filename in os.listdir(directory_path):
-    if filename.endswith(".pdf"):  # Check if the file is a PDF
+    if filename.endswith(".pdf") and processed_files < 5:  # Check if the file is a PDF and counter is less than 5
         pdf_file_path = os.path.join(directory_path, filename)
         print(f"Processing {pdf_file_path}...")
 
@@ -17,5 +18,7 @@ for filename in os.listdir(directory_path):
         # Access and print the /Producer parameter from metadata
         producer = metadata.get('/Producer', 'Producer not found')
         print(f"Producer: {producer}\n")
-    else:
-        continue
+
+        processed_files += 1  # Increment the counter
+    elif processed_files >= 5:
+        break  # Exit loop after processing 5 files
