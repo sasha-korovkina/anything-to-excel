@@ -1,9 +1,13 @@
 import streamlit as st
 import pandas as pd
 import tabula
+import tempfile
+import os
+from openpyxl import load_workbook
 
 # Set page title
 st.set_page_config(page_title="PDF to Excel Converter")
+
 
 def main():
     st.title("PDF to Excel Converter")
@@ -29,13 +33,10 @@ def main():
 
             # Create Excel file
             excel_file_path = "output.xlsx"
-            with pd.ExcelWriter(excel_file_path) as writer:
-                for idx, df in enumerate(excel_dataframes, start=1):
-                    df.to_excel(writer, sheet_name=f"Sheet{idx}", index=False)
 
             # Display download link
             st.write("Download Excel file:")
-            st.download_button(label="Download", data=open(excel_file_path, "rb"), file_name="output.xlsx")
+            st.download_button(label="Download", data=open(excel_file_path, "rb"), file_name="output.xlsm")
 
 if __name__ == "__main__":
     main()
