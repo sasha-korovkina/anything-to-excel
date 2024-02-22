@@ -3,7 +3,6 @@ import win32com.client
 import os
 import pythoncom  # Import pythoncom library
 
-
 def inject_macro(excel_file_path, macro_code):
     # Initialize the COM library for the current thread
     pythoncom.CoInitialize()
@@ -26,16 +25,15 @@ def inject_macro(excel_file_path, macro_code):
 def main():
     st.title('Excel Macro Generator')
 
+    macro_code = st.text_area("Input your macro code here:", '''
+    Sub SampleMacro()
+        MsgBox "This is a sample macro!"
+    End Sub
+    ''', height=300)
+
     if st.button('Generate Excel File with Macro'):
         # Temporary path for the generated Excel file
         excel_file_path = os.path.join(os.getcwd(), "GeneratedExcelFile.xlsm")
-
-        # Macro code to inject
-        macro_code = '''
-        Sub SampleMacro()
-            MsgBox "This is a sample macro!"
-        End Sub
-        '''
 
         # Generate the Excel file
         inject_macro(excel_file_path, macro_code)
