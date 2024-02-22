@@ -1,42 +1,49 @@
-import streamlit as st
-import pandas as pd
-import tabula
-import tempfile
+import win32com.client
 import os
-from openpyxl import load_workbook
-
-# Set page title
-st.set_page_config(page_title="PDF to Excel Converter")
 
 
-def main():
-    st.title("PDF to Excel Converter")
+def convert_and_inject_macro(excel_file_path, macro_code):
+    """
+    Converts an .xlsx file to .xlsm and injects a macro.
+    """
+    # Ensure the Excel instance is not visible and alerts are disabled
+    com_instance = win32com.client.Dispatch("Excel.Application")
+    com_instance.Visible = False
+    com_instance.DisplayAlerts = False
 
-    # File uploader
-    uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
+    # Derive new file path with .xlsm extension
+    new_file_path = os.path.splitext(excel_file_path)[0] + ".xlsm"
 
-    # Check if a file was uploaded
-    if uploaded_file is not None:
-        # Display file details
-        st.write("### Uploaded file details:")
-        file_details = {"Filename": uploaded_file.name, "FileType": uploaded_file.type}
-        st.write(file_details)
+    # Open the .xlsx file
+    workbook = com_instance.Workbooks.Open(excel_file_path)
 
-        # Convert PDF to Excel
-        st.write("### Convert PDF to Excel:")
-        if st.button("Convert to Excel"):
-            # Extract tables from PDF using tabula
-            tables = tabula.read_pdf(uploaded_file, pages="all", multiple_tables=True)
+    # Save the workbook as .xlsm (macro-enabled workbook)
+    workbook.SaveAs(Filename=new_file_path, FileFormat=52)  # 52 corresponds to .xlsm
 
-            # Convert each table to a DataFrame
-            excel_dataframes = [pd.DataFrame(table) for table in tables]
+    # Add a VBA module and inject the macro code
+    xlmodule = workbook.VBProject.VBComponents.Add(1)  # 1 is for a standard module
+    xlmodule.CodeModule.AddFromString(macro_code)
 
-            # Create Excel file
-            excel_file_path = "output.xlsx"
+    # Save changes to the .xlsm file
+    workbook.Close(SaveChanges=True)
 
-            # Display download link
-            st.write("Download Excel file:")
-            st.download_button(label="Download", data=open(excel_file_path, "rb"), file_name="output.xlsm")
+    # Quit Excel
+    com_instance.Quit()
 
-if __name__ == "__main__":
-    main()
+    return new_file_path
+
+
+# Path to your original Excel file (.xlsx)
+original_excel_file_path = "C:\\Users\\sasha\\Desktop\\Sabadell Averages.xlsx"
+
+# Macro code to inject
+macro_code = '''
+Sub SampleMacro()
+   MsgBox "This is a sample macro!"
+End Sub
+'''
+
+# Convert the .xlsx file to .xlsm and inject the macro
+new_file_path = convert_and_inject_macro(original_excel_file_path, macro_code)
+
+print(f"Macro injected successfully into: {new_file_path}")
