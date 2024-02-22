@@ -1,12 +1,7 @@
-# Standardised PDF Extractor 📊🔍
+# PDF To Excel 
 
-## Overview
-Hey! This is my first open source project where you can extract text from PDF file segments. Here is how it works so far:
-1. You select a section of the PDF file you want
-2. This PDF file section is saved
-
-[https://www.youtube.com/watch?v=pnV7IJnuQos
-](https://www.youtube.com/watch?v=pnV7IJnuQos)https://www.youtube.com/watch?v=pnV7IJnuQos
-
-**Discoveries**
-Thanks to: u/plg94 (Reddit), I realized where to look for the PDF 2nd layer - Adobe properties file.
+How this works:
+1. It creates an Excel workbook
+2. It pastes the correct macro into this workbook
+3. This macro loads in the data from the PDF file
+4. You can see the data from the PDF file in the export file from this thing 
