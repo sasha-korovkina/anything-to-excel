@@ -76,11 +76,32 @@ def main():
             # Generate the Excel file
             inject_macro(excel_file_path, "pdfLoader")
 
+            # Execute the macro
+            execute_macro(excel_file_path, pdf_file.name)
+
             # Display a download button for the Excel file
             download_button_str = generate_download_button(excel_file_path, pdf_file.name.split('.')[0])
             st.markdown(download_button_str, unsafe_allow_html=True)
 
         st.success("Excel files generated successfully!")
+
+def execute_macro(file_path, pdf_file_name):
+    # Open the Excel file
+    app = xw.App(visible=False)
+    wb = app.books.open(file_path)
+
+    try:
+        # Run the macro with the PDF file name as parameter
+        macro_name = "pdfLoader"
+        pdf_file = os.path.join(os.getcwd(), pdf_file_name)
+        wb.macro(macro_name)(pdf_file)
+    except Exception as e:
+        print(f"Error occurred while running macro: {e}")
+    finally:
+        # Save and close the workbook
+        wb.save()
+        wb.close()
+        app.quit()
 
 def generate_download_button(file_path, file_name):
     with open(file_path, "rb") as file:
