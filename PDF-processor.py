@@ -25,13 +25,12 @@ def inject_macro(excel_file_path, macro_code, macro_name):
 def run_excel_macro_with_parameter(file_path, macro_name, pdf_file):
     wb = xw.Book(file_path)
     app = xw.App(visible=False)
-    macro = wb.macro(macro_name)
 
     try:
-        macro(pdf_file)
+        # Execute the macro with the parameter
+        wb.macro(macro_name)(pdf_file)
     except Exception as e:
         error_message = str(e)
-        wb.sheets['Errors'].range('A1').value = error_message
         raise
     finally:
         app.quit()
@@ -75,18 +74,23 @@ def main():
 
     if st.button('Generate Excel File with Macro'):
         # Temporary path for the generated Excel file
-        excel_file_path = os.path.join(os.getcwd(), "GeneratedExcelFile.xlsm")
+        excel_file_path = os.path.join(os.getcwd(), "sasha.xlsm")
 
         # Generate the Excel file
         inject_macro(excel_file_path, macro_code, "pdfLoader")
 
-        # Execute the macro within the Excel
-        macro_name = "pdfLoader"
-        pdf_file = r"M:\CDB\Analyst\Rhys\Data\Goldman Sachs Europe DDMMYYYY 30032023 MDXHEALTH S.A._BE0003844611_21-Mar-2023.pdf_decrypted.pdf"
+    if st.button('Run Macro without Displaying Excel'):
+        try:
+            # Temporary path for the generated Excel file
+            excel_file_path = os.path.join(os.getcwd(), "sasha.xlsm")
 
-        # Run the macro with the input parameter
-        run_excel_macro_with_parameter(excel_file_path, macro_name, pdf_file)
-
+            # Execute the macro within the Excel
+            macro_name = "pdfLoader"
+            pdf_file = r"M:\CDB\Analyst\Rhys\Data\Goldman Sachs Europe DDMMYYYY 30032023 MDXHEALTH S.A._BE0003844611_21-Mar-2023.pdf_decrypted.pdf"
+            run_excel_macro_with_parameter(excel_file_path, macro_name, pdf_file)
+        finally:
+            st.success("Macro executed successfully!")
+    if st.button('Download'):
         with open(excel_file_path, "rb") as file:
             btn = st.download_button(
                 label="Download Excel File with Macro",
