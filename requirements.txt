@@ -1,3 +1,5 @@
 streamlit
 pywin32
 xlwings
+win32com
+pywin32
