@@ -2,8 +2,9 @@ import streamlit as st
 import win32com.client
 import os
 import pythoncom  # Import pythoncom library
+import xlwings as xw
 
-def inject_macro(excel_file_path, macro_code):
+def inject_macro(excel_file_path, macro_code, macro_name):
     # Initialize the COM library for the current thread
     pythoncom.CoInitialize()
 
@@ -13,12 +14,27 @@ def inject_macro(excel_file_path, macro_code):
 
     workbook = com_instance.Workbooks.Add()
     xlmodule = workbook.VBProject.VBComponents.Add(1)
+    xlmodule.Name = macro_name  # Set the name of the module
     xlmodule.CodeModule.AddFromString(macro_code)
     workbook.SaveAs(Filename=excel_file_path, FileFormat=52)
     workbook.Close()
     com_instance.Quit()
 
     pythoncom.CoUninitialize()
+
+def run_excel_macro_with_parameter(file_path, macro_name, pdf_file):
+    wb = xw.Book(file_path)
+    app = xw.App(visible=False)
+    macro = wb.macro(macro_name)
+
+    try:
+        macro(pdf_file)
+    except Exception as e:
+        error_message = str(e)
+        wb.sheets['Errors'].range('A1').value = error_message
+        raise
+    finally:
+        app.quit()
 
 def main():
     st.title('Excel Macro Generator')
@@ -62,22 +78,25 @@ def main():
         excel_file_path = os.path.join(os.getcwd(), "GeneratedExcelFile.xlsm")
 
         # Generate the Excel file
-        inject_macro(excel_file_path, macro_code)
+        inject_macro(excel_file_path, macro_code, "pdfLoader")
 
         # Execute the macro within the Excel
+        macro_name = "pdfLoader"
+        pdf_file = r"M:\CDB\Analyst\Rhys\Data\Goldman Sachs Europe DDMMYYYY 30032023 MDXHEALTH S.A._BE0003844611_21-Mar-2023.pdf_decrypted.pdf"
 
+        # Run the macro with the input parameter
+        run_excel_macro_with_parameter(excel_file_path, macro_name, pdf_file)
 
-        # # Read the generated file into a buffer
-        # with open(excel_file_path, "rb") as file:
-        #     btn = st.download_button(
-        #         label="Download Excel File with Macro",
-        #         data=file,
-        #         file_name="GeneratedExcelFile.xlsm",
-        #         mime="application/vnd.ms-excel.sheet.macroEnabled.12"
-        #     )
+        with open(excel_file_path, "rb") as file:
+            btn = st.download_button(
+                label="Download Excel File with Macro",
+                data=file,
+                file_name="GeneratedExcelFile.xlsm",
+                mime="application/vnd.ms-excel.sheet.macroEnabled.12"
+            )
 
-        # if btn:
-        #     st.success("Download started!")
+        if btn:
+            st.success("Download started!")
 
 if __name__ == "__main__":
     main()
